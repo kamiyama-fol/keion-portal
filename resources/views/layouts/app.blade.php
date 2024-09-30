@@ -1,37 +1,31 @@
+{{-- resources/views/layouts/app.blade.php --}}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>@yield('title', 'ポータルサイト')</title>
-</head>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-<body>
-    <header>
-        <h1>京都産業大学 軽音楽部ポータルサイト</h1>
-        <ul class="menu">
-            <li><a href="">スタジオ予約</a></li>
-            <li>バンド登録</li>
-            <li>設定</li>
-            <li>幹部用</li>
-            @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">ログアウト</button>
-            </form>
-            @endauth
-        </ul>
-    </header>
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
-    <main>
-        @yield('content')
-    </main>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
 
-    <footer>
-        <p>© 2024 京都産業大学 電子計算機応用部</p>
-    </footer>
-</body>
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
 
-</html>
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}

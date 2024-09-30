@@ -1,9 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="600.000000pt" height="600.000000pt" viewBox="0 0 500.000000 500.000000"
- preserveAspectRatio="xMidYMid meet" {{ $attributes }}>
+ width="500.000000pt" height="500.000000pt" viewBox="0 0 500.000000 500.000000"
+ preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,500.000000) scale(0.100000,-0.100000)"
-fill="#fffff" stroke="none">
+fill="#000000" stroke="none">
 <path d="M2380 4166 c-163 -46 -259 -155 -260 -297 0 -150 106 -259 319 -328
 109 -35 141 -60 141 -107 0 -43 -27 -73 -75 -84 -51 -12 -94 -5 -223 32 -56
 16 -110 27 -119 24 -13 -5 -15 -17 -10 -64 13 -147 91 -205 292 -219 230 -15
@@ -65,4 +68,3 @@ fill="#fffff" stroke="none">
 -23 23 0 5 10 14 23 19 24 10 509 13 544 4z"/>
 </g>
 </svg>
-
