@@ -17,11 +17,13 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             [
-                'family_name' => '上山',
-                'first_name' => '航輝',
-                'display_name' => 'kamiyama',
-                'email' => 'g2220745@cc.kyoto-su.ac.jp'
+                'name' => '上山航輝',
+                'display_name' => 'カミヤマ',
+                'admin' => 'true',
+                'email' => 'g2220745@cc.kyoto-su.ac.jp',
+                'password' => 'test12345'
             ]
+
         ]);
     }
 }
