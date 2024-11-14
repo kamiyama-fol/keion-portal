@@ -28,6 +28,9 @@
 
             <!-- Page Content -->
             <main>
+                <div class="bg-green-500 text-white font-bold py-2 px-4 rounded-md shadow-md">
+                    {{ session('status') }}
+                </div>
                 {{ $slot }}
             </main>
             @if (isset($footer))

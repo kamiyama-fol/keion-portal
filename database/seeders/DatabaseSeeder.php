@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Studio;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,11 +20,19 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => '上山航輝',
                 'display_name' => 'カミヤマ',
+                'grate' => 3,
                 'admin' => 'true',
                 'email' => 'g2220745@cc.kyoto-su.ac.jp',
                 'password' => 'test12345'
             ]
 
+        ]);
+
+        Studio::factory()->create([
+            [
+                'name' => '大学スタジオ',
+                'made_by' => '1'
+            ]
         ]);
     }
 }

@@ -1,6 +1,9 @@
 {
     "Name": "名前",
     "Display Name": "表示名",
+    "Grade": "学年",
+    "Select Grade": "学年を選択",
+    "Birthday": "生年月日",
     "Profile": "アカウント",
     "Profile Information": "アカウント情報",
     "Cancel": "キャンセル",

@@ -19,6 +19,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'display_name',
+
+        //追加項目
+        'grade',
+        'admin',
+        'birthday',
+
         'email',
         'password',
     ];
@@ -45,4 +51,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
 }

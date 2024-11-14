@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudioController;
+use App\Http\Controllers\StudioReservationController;
+use App\Http\Controllers\UserController;
+
 
 Route::get('/', function () {
     return redirect('dashboard');
@@ -16,13 +19,18 @@ Route::get('/dashboard', function () {
 
 //ログインが必要なページのルートはここに実装
 Route::middleware('auth')->group(function () {
+    //アカウント周り（breezeで自動実装）
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //StudioControllerのルーティング
-    Route::get("/studio", [StudioController::class, 'show'])->name('studio');
-    Route::resource('band', "BandController");
+    //usersの操作（管理者）
+    Route::resource("/users", UserController::class);
+    Route::patch('users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
+
+    Route::resource("/studios", StudioController::class);
+    Route::resource("/reservations", StudioReservationController::class);
+    
 });
 
 

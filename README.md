@@ -1,66 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 軽音ポータル
+軽音楽部のスタジオの予約状況を管理するwebアプリです。
+## 要件定義
+### 目的（背景）
+- 従来の予約状況の管理における問題点の解消（必須）
+    - 部長が総会後に公開する写真の予約表から予約状況が反映されない
+        - 追加で予約する際、LINEで逐一連絡しているのでその後予約をさらに取る場合LINEのチャットログを振り返る必要がある。
+    - フリーの予約システムでは誰が予約したかわからない
+    - 電話番号など不要な情報を毎回入力する手間がある。
+    - 数百人規模で予約をするとバグが発生
+    - オンラインのシステムの場合軽音部のみ必要な処理を自動でできない
+    - 合宿時のみ複数のスタジオの予約を受付
+    - 特定の時間でライブが近いバンド以外の予約を弾く
+    - 対面の総会で収集した予約を幹部１人が手動で入力する
+- 幹部が行っている事務処理（下記）の自動化
+    - ライブにエントリーしたバンドの集計
+    - セットリスト、セッティング図の回収
+    - 連絡事項共有
+- 部員のバンド運営の効率化
+    - 練習の日程調整
+- 部員のコミュニケーションを円滑化（他の機能が完成するまで手をつけるな！）
+    - コラム投稿機能
+    - 誕生日お祝い機能
+### 目標
+- 1の要件を満たし、スタジオ予約機能のみを持ったシステム「軽音ポータル」の開発
+- 11月末までに完成
+- 12月中に実際に触ってもらってテストを行い12月末に運用
+- 12月中は従来の予約方法と並行して行い、問題点を逐次修正する
+- 12月末に以下の致命的な問題点を解消した後、従来の運用方法を廃止し軽音ポータルを使用した予約管理方法に切り替える。
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+- 2,3 の要件を満たした機能をアジャイルに追加（1月末くらい）
 
-## About Laravel
+### プロジェクトのスコープ
+webフレームワークを使用したフルスタック開発
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 機能要件
+#### 12月末からの運用
+##### ユーザ管理機能
+- 全てのユーザがアカウントを作成、自身のアカウント情報編集、アカウントの削除ができる。
+- 管理者ステータスを設ける。
+- 原則幹部&システム管理者に付与され、他の機能における全ての情報を編集できる。
+- 管理者は加えて以下のことができる
+    - 他のユーザの削除
+    - 他のユーザの管理者権限の付与&解除
+##### スタジオ予約機能
+- 全てのユーザーが以下の条件以外で時間帯のスタジオを予約、取り消しができる。
+    - 他のユーザがすでに予約を入れている。
+    - 予約可能な時間帯ではない
+    - 管理者が予約できないようにしている場合(点検など)
+- 管理者は以下のことができる。
+    - 全てのユーザの予約の強制登録、強制削除
+    - 指定された時間ごとに予約可能なバンドを増やす
+    ###### 時間指定の例
+        17:00- 直近のバンドに出場するバンドのみ
+        17:15- 全てのバンド
+        17:30- 全ユーザ
+- バンド数制限時間内、1回あたりの最大予約時間の制限
+#### 2月からの運用
+まだ決まってない
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 非機能要件
+- 最大300人の同時アクセスに耐えられるようにする。
+- 開発者が引退した後、運用が不可能なレベルの致命的な不具合が発生しないようにする。
+- ユーザの操作記録を最大1年保管する。
+## 基本設計
+## システム構成
+### 使用技術
+#### Laravel
+11.23.5
+#### SQlite
+3.43.2 2023-10-10 13:08:14 1b37c146ee9ebb7acd0160c0ab1fd11017a419fa8a3187386ed8cb32b709aapl (64-bit)
+###　設計図
+[こちら](https://drive.google.com/file/d/13GQtEGV2ZPHl-MBhIMsOIDawI3Ef0_Rt/view?usp=sharing)のdrowioをご確認ください。
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

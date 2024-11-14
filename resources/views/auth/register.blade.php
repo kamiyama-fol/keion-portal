@@ -1,6 +1,6 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
-    @csrf
+        @csrf
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -8,12 +8,25 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <div>
-            <x-input-label for="display_name" :value="__('Display Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="display_name" :value="old('display_name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('display_name')" class="mt-2" />
+        <!-- Grade -->
+        <div class="mt-4">
+            <x-input-label for="grade" :value="__('Grade')" />
+            <select id="grade" name="grade" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                <option value="" disabled selected>{{ __('Select Grade') }}</option>
+                <option value="1">1回生</option>
+                <option value="2">2回生</option>
+                <option value="3">3回生</option>
+                <option value="4">4回生</option>
+            </select>
+            <x-input-error :messages="$errors->get('grade')" class="mt-2" />
         </div>
 
+        <!-- Birthday -->
+        <div class="mt-4">
+            <x-input-label for="birthday" :value="__('Birthday')" />
+            <x-text-input id="birthday" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="date" name="birthday" :value="old('birthday')" required />
+            <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
+        </div>
 
         <!-- Email Address -->
         <div class="mt-4">

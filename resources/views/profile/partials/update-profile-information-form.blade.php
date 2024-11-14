@@ -17,12 +17,35 @@
         @csrf
         @method('patch')
 
+        <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
+        <!-- Display Name -->
+
+        <!-- Grade -->
+        <div>
+            <x-input-label for="grade" :value="__('Grade')" />
+            <select id="grade" name="grade" class="block mt-1 w-full">
+                <option value="1" {{ old('grade', $user->grade) == 1 ? 'selected' : '' }}>1回生</option>
+                <option value="2" {{ old('grade', $user->grade) == 2 ? 'selected' : '' }}>2回生</option>
+                <option value="3" {{ old('grade', $user->grade) == 3 ? 'selected' : '' }}>3回生</option>
+                <option value="4" {{ old('grade', $user->grade) == 4 ? 'selected' : '' }}>4回生</option>
+            </select>
+            <x-input-error class="mt-2" :messages="$errors->get('grade')" />
+        </div>
+
+        <!-- Birthday -->
+        <div>
+            <x-input-label for="birthday" :value="__('Birthday')" />
+            <x-text-input id="birthday" name="birthday" type="date" class="mt-1 block w-full" :value="old('birthday', $user->birthday)" required />
+            <x-input-error class="mt-2" :messages="$errors->get('birthday')" />
+        </div>
+
+        <!-- Email -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
@@ -47,6 +70,7 @@
             @endif
         </div>
 
+        <!-- Save Button -->
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

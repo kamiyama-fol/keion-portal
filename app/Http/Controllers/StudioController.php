@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use app\Models\Studio;
 /**
- * スタジオ予約機能を制御するコントローラ
+ * 予約するスタジオを制御するコントローラ
  */
 
 class StudioController extends Controller
 {
-
 
     /**
      * Display a listing of the resource.
@@ -17,7 +18,12 @@ class StudioController extends Controller
     public function index()
     {
         //
-        return view('studio.index');
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
+        
+        //$studios = ;
+        return view('studios.index');
 
     }
 
@@ -28,8 +34,12 @@ class StudioController extends Controller
     {
         //
         
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
+        return view('studios.create');
         
-        return view('studio.create');
+        
     }
 
     /**
@@ -37,6 +47,9 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
         //
     }
 
@@ -45,6 +58,9 @@ class StudioController extends Controller
      */
     public function show(string $id)
     {
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
         //
 
     }
@@ -54,6 +70,9 @@ class StudioController extends Controller
      */
     public function edit(string $id)
     {
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
         //
     }
 
@@ -62,6 +81,9 @@ class StudioController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
         //
     }
 
@@ -70,6 +92,9 @@ class StudioController extends Controller
      */
     public function destroy(string $id)
     {
+        if (Auth::user()->admin != 1){
+            return redirect('/');
+        }
         //
     }
 }
