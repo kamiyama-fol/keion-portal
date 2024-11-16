@@ -28,9 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::resource("/users", UserController::class);
     Route::patch('users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggleAdmin');
 
-    Route::resource("/studios", StudioController::class);
+
+
+    Route::resource('studios', StudioController::class)->only(['index','store', 'update', 'destroy']);
     Route::resource("/reservations", StudioReservationController::class);
-    
 });
 
 

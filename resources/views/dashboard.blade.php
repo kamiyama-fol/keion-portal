@@ -19,7 +19,7 @@
                 <!-- Alpine.jsを使ったプルダウン -->
                 <div x-data="{ open: false }">
                     <!-- 見出しとアイコン -->
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center cursor-pointer">
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center">
                         {{ __('予約スタジオ') }}
                     </h2>
 
@@ -60,7 +60,7 @@
                 <!-- Alpine.jsを使ったプルダウン -->
                 <div x-data="{ open: false }">
                     <!-- 見出しとアイコン -->
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center cursor-pointer">
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center">
                         {{ __('所属バンド') }}
                     </h2>
 
