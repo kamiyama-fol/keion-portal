@@ -70,7 +70,7 @@ webフレームワークを使用したフルスタック開発
 11.23.5
 #### SQlite
 3.43.2 2023-10-10 13:08:14 1b37c146ee9ebb7acd0160c0ab1fd11017a419fa8a3187386ed8cb32b709aapl (64-bit)
-###　設計図
+### 設計図
 [こちら](https://drive.google.com/file/d/13GQtEGV2ZPHl-MBhIMsOIDawI3Ef0_Rt/view?usp=sharing)のdrowioをご確認ください。
 
 
