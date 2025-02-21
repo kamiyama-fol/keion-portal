@@ -14,10 +14,10 @@ return new class extends Migration
         //
         Schema::create('studio_reservations', function (Blueprint $table){
             $table->id();
-            $table->string('studio');
-            $table->dateTime('datetime');
-            $table->string('reserved_person');
-            $table->string('reserved_band')->nullable();
+            $table->dateTime('use_datetime')->unique();
+            $table->foreignId('studio_id')->constrained('studios');
+            $table->foreignId('reserved_user_id')->constrained('users');
+            $table->string('reserved_band_id')->nullable();
 
             $table->timestamps();
         });
@@ -29,5 +29,6 @@ return new class extends Migration
     public function down(): void
     {
         //
+        Schema::dropIfExists('studio_reservations');
     }
 };

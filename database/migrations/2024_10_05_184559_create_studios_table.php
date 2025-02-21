@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('studios', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('made_by');
+            $table->foreignId('made_user_id')->constrained('users');
             $table->timestamps();
         });
     }

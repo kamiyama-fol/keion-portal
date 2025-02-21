@@ -57,7 +57,7 @@ class StudioController extends Controller
             if (!empty($name)) {
                 Studio::create([
                     'name' => $name,
-                    'made_by' => auth()->id(),
+                    'made_user_id' => auth()->id(), // use Illuminate\Support\Facades\Auth; のメソッド
                 ]);
             }
         }
@@ -92,19 +92,15 @@ class StudioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Studio $studio)
+    public function update(Request $request, $id)
     {
-        if (Auth::user()->admin != 1) {
-            return redirect('/');
-        }
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $studio = Studio::findOrFail($id);
 
-        $studio->update(['name' => $request->name]);
+        // 名前を更新
+        $studio->name = $request->input('name');
+        $studio->save();
 
-        return response()->json(['message' => 'Studio updated successfully.']);
-        //
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -116,7 +112,7 @@ class StudioController extends Controller
             return redirect('/');
         }
         $studio->delete();
-        return redirect()->route('studios.index')->with('status', 'Studio deleted successfully.');
+        return redirect()->route('studios.index')->with('status', 'スタジオが削除されました。');
         //
     }
 }

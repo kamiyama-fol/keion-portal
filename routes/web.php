@@ -5,16 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudioController;
 use App\Http\Controllers\StudioReservationController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
     return redirect('dashboard');
 });
 
 //breezeインストール時に生成されたルート
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 
 //ログインが必要なページのルートはここに実装
@@ -30,8 +29,8 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::resource('studios', StudioController::class)->only(['index','store', 'update', 'destroy']);
-    Route::resource("/reservations", StudioReservationController::class);
+    Route::resource('/studios', StudioController::class)->only(['index','store', 'update', 'destroy']);
+    Route::resource("/studio-reservations", StudioReservationController::class);
 });
 
 

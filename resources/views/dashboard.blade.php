@@ -23,31 +23,36 @@
                         {{ __('予約スタジオ') }}
                     </h2>
 
-                    <!-- ここに予約表などのコンテンツを追加 -->
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <p class="text-gray-800"></p>
 
-                        <!-- 予約表の例 -->
+                        <!-- 予約表 -->
                         <table class="table-auto w-full mt-4">
                             <thead>
                                 <tr>
-                                    <th class="px-4 py-2">日付</th>
-                                    <th class="px-4 py-2">時間</th>
+                                    <th class="px-4 py-2">日時</th>
+                                    <th class="px-4 py-2">スタジオ</th>
                                     <th class="px-4 py-2">バンド</th>
                                     <th class="px-4 py-2">鍵返却</th>
                                     <th class="px-4 py-2">削除</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for ($hour = 8; $hour <= 20; $hour++)
+                                @foreach ($myReservations as $myReservation)
                                     <tr>
+                                        <td class="border px-4 py-2">{{$myReservation->use_datetime}}</td>
+                                        <td class="border px-4 py-2">{{$myReservation->studio_id}}</td>
+                                        <td class="border px-4 py-2">{{$myReservation->reserved_band_id}}</td>
                                         <td class="border px-4 py-2"></td>
-                                        <td class="border px-4 py-2"></td>
-                                        <td class="border px-4 py-2"></td>
-                                        <td class="border px-4 py-2"></td>
-                                        <td class="border px-4 py-2">削除</td>
+
+                                        <td class="border px-4 py-2"><form method="POST" action="{{ route('studio-reservations.destroy',['studio_reservation' => $myReservation->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">削除する</button>
+                                        </form>
+                                    </td>
                                     </tr>
-                                @endfor
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -64,12 +69,10 @@
                         {{ __('所属バンド') }}
                     </h2>
 
-
-                    <!-- ここに予約表などのコンテンツを追加 -->
                     <div class="bg-white shadow-md rounded-lg p-6">
                         <p class="text-gray-800"></p>
 
-                        <!-- 予約表の例 -->
+                        <!-- バンド一覧-->
                         <table class="table-auto w-full mt-4">
                             <thead>
                                 <tr>
