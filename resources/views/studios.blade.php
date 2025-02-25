@@ -7,7 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
 
             <!-- スタジオ一覧セクション -->
             <div class="mt-8">
@@ -44,7 +43,7 @@
                                                     <span x-show="!editing">編集</span>
                                                     <span x-show="editing">保存</span>
                                                 </button>
-                                                
+
                                             </div>
                                         </td>
                                         <td class="border px-4 py-2">{{ $studio->user ? $studio->user->name : 'Unknown' }}</td>

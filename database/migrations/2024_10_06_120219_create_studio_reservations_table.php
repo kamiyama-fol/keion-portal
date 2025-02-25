@@ -14,7 +14,7 @@ return new class extends Migration
         //
         Schema::create('studio_reservations', function (Blueprint $table){
             $table->id();
-            $table->dateTime('use_datetime')->unique();
+            $table->dateTime('use_datetime')->unique(); //予約の重複を許さない
             $table->foreignId('studio_id')->constrained('studios');
             $table->foreignId('reserved_user_id')->constrained('users');
             $table->string('reserved_band_id')->nullable();

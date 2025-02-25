@@ -3,11 +3,18 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center">
             {{ __('スタジオ予約') }}
         </h2>
-
-
     </x-slot>
 
     <div class="mt-8">
+        <!-- 管理モード切り替えボタン -->
+        @if (auth()->user()->admin)
+            <div class="mb-4 text-right">
+                <button onclick="toggleAdminMode()" id="admin-toggle" class="bg-red-500 text-white px-4 py-2 rounded-md">
+                    管理モード: <span id="admin-mode-text">OFF</span>
+                </button>
+            </div>
+        @endif
+
         <!-- スタジオ選択タブ -->
         <div class="bg-gray-100 p-4 rounded-md shadow-md flex items-center space-x-4 mb-4">
             @foreach ($studios as $studio)
@@ -22,21 +29,6 @@
 
         <!-- スタジオ予約セクション -->
         <div class="bg-white shadow-md rounded-lg p-6">
-
-            <!-- 左右の矢印ボタン -->
-            <div class="ml-auto flex items-center">
-                <!-- 前の週へのボタン -->
-                <a href="{{ route('studio-reservations.create', ['week_start' => $startOfWeek->copy()->subWeek()->format('Y-m-d')]) }}"
-                    class="mr-4">
-                    <x-primary-button>← 前の週</x-primary-button>
-                </a>
-
-                <!-- 次の週へのボタン -->
-                <a
-                    href="{{ route('studio-reservations.create', ['week_start' => $startOfWeek->copy()->addWeek()->format('Y-m-d')]) }}">
-                    <x-primary-button>次の週 →</x-primary-button>
-                </a>
-            </div>
             <form method="POST" action="{{ route('studio-reservations.store') }}">
                 @csrf
                 @method('POST')
@@ -48,26 +40,24 @@
                                 <th class="px-4 py-2">
                                     @php
                                         $currentDate = $startOfWeek->copy()->addDay($day);
-                                        $isPastDate = $currentDate->isPast(); // 過去の日付かを判定
+                                        $isPastDate = $currentDate->isPast();
                                     @endphp
                                     <span class="{{ $isPastDate ? 'text-gray-500' : '' }}">
                                         {{ $currentDate->format('Y/m/d') }}
                                     </span><br>
-                                    {{ ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土
-                                    曜日'][$day] }}
+                                    {{ ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'][$day] }}
                                 </th>
                             @endfor
                         </tr>
                     </thead>
                     <tbody>
-                        @for ($hour = 8; $hour <= 19; $hour++)<!--8時スタート-->
+                        @for ($hour = 8; $hour <= 19; $hour++)
                             <tr>
                                 <td class="border px-4 py-2">{{ $hour }}:00-{{ $hour + 1 }}:00</td>
                                 @for ($day = 0; $day < 7; $day++)
                                     @php
-                                        $loginUser =
                                         $date = $startOfWeek->copy()->addDay($day);
-                                        $isPast = $date->isPast() && !$date->isToday(); // 過去の日付か、かつ、今日でないかを判定
+                                        $isPast = $date->isPast() && !$date->isToday();
                                         $timeKey = $date->format('Y-m-d') . ' ' . $hour . ':00';
                                         $reservation = isset($reservations[$timeKey])
                                             ? $reservations[$timeKey]->first()
@@ -76,8 +66,22 @@
                                     <td class="border px-4 py-2 text-center {{ $isPast ? 'bg-gray-200' : '' }}">
                                         @if ($reservation)
                                             <span class="text-red-500 font-bold">
-                                                {{ $reservation->reservedUser->name ?? '不明' }} <!-- 予約者の名前を表示 -->
+                                                {{ $reservation->reservedUser->name ?? '不明' }}
                                             </span>
+                                            @if ($reservation->user_id === auth()->id() || auth()->user()->admin)
+                                            <form method="POST"
+                                            action="{{ route('studio-reservations.destroy', ['studio_reservation' => $reservation->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-green-500 text-white px-4 py-2 rounded">削除する</button>
+                                        </form>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="ml-2 text-white bg-red-500 px-2 py-1 rounded-md admin-delete hidden">削除</button>
+                                                </form>
+                                            @endif
                                         @elseif (!$isPast)
                                             <input type="checkbox"
                                                 name="reservation[{{ $hour }}][{{ $date->format('Y-m-d') }}]" />
@@ -89,11 +93,22 @@
                         @endfor
                     </tbody>
                 </table>
-                <button type="submit"
-                    class="bg-blue-500 px-4 py-2 shadow-md rounded-lg rounded hover:bg-blue-600  mb-4">
+                <button type="submit" class="bg-blue-500 px-4 py-2 shadow-md rounded-lg hover:bg-blue-600 mb-4">
                     予約する
                 </button>
             </form>
         </div>
     </div>
+
+    <script>
+        function toggleAdminMode() {
+            let adminModeText = document.getElementById("admin-mode-text");
+            let deleteButtons = document.querySelectorAll(".admin-delete");
+            let isActive = adminModeText.innerText === "ON";
+            adminModeText.innerText = isActive ? "OFF" : "ON";
+            deleteButtons.forEach(btn => {
+                btn.classList.toggle("hidden", isActive);
+            });
+        }
+    </script>
 </x-app-layout>

@@ -40,17 +40,20 @@
                             <tbody>
                                 @foreach ($myReservations as $myReservation)
                                     <tr>
-                                        <td class="border px-4 py-2">{{$myReservation->use_datetime}}</td>
-                                        <td class="border px-4 py-2">{{$myReservation->studio_id}}</td>
-                                        <td class="border px-4 py-2">{{$myReservation->reserved_band_id}}</td>
+                                        <td class="border px-4 py-2">{{ $myReservation->use_datetime }}</td>
+                                        <td class="border px-4 py-2">{{ $myReservation->studio_id }}</td>
+                                        <td class="border px-4 py-2">{{ $myReservation->reserved_band_id }}</td>
                                         <td class="border px-4 py-2"></td>
 
-                                        <td class="border px-4 py-2"><form method="POST" action="{{ route('studio-reservations.destroy',['studio_reservation' => $myReservation->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">削除する</button>
-                                        </form>
-                                    </td>
+                                        <td class="border px-4 py-2">
+                                            <form method="POST"
+                                                action="{{ route('studio-reservations.destroy', ['studio_reservation' => $myReservation->id]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="bg-green-500 text-white px-4 py-2 rounded">削除する</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

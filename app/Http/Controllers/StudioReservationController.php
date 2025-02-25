@@ -43,8 +43,8 @@ class StudioReservationController extends Controller
             ->with('reservedUser') // 予約者の情報を取得する
             ->get()
             ->groupBy(function ($reservation) {
-            return $reservation->use_datetime->format('Y-m-d H:i');
-    });
+                return $reservation->use_datetime->format('Y-m-d H:i');
+            });
 
         // ビューにデータを渡す
         return view('studio-reservation', [
@@ -124,16 +124,18 @@ class StudioReservationController extends Controller
     public function destroy(string $id)
     {
         //
-        try{
+
+        try {
             $reservation = StudioReservation::findOrFail($id);
-            $reservation->delete();
-            return redirect()->back()->with('status', 'キャンセルが完了しました！');
-        }
-        catch (\Exception $e) {
+
+            if (auth()->user()->admin || $reservation->reserved_user_id == auth()->id()) {
+                $reservation->delete();
+                return redirect()->back()->with('status', 'キャンセルが完了しました！');
+            }
+
+        } catch (\Exception $e) {
             // エラーメッセージをセッションに保存
             return redirect()->back()->with('status', 'キャンセルに失敗しました。');
         }
     }
-
 }
-
