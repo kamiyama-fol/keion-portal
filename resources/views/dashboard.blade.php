@@ -47,7 +47,7 @@
 
                                         <td class="border px-4 py-2">
                                             <form method="POST"
-                                                action="{{ route('studio-reservations.destroy', ['studio_reservation' => $myReservation->id]) }}">
+                                                action="{{ route('studio-reservations.destroy', $myReservation->id )}}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"

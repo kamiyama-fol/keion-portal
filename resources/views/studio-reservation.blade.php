@@ -29,6 +29,21 @@
 
         <!-- スタジオ予約セクション -->
         <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <!-- 前の週へ移動 -->
+                <a href="{{ route('studio-reservations.create', ['studio_id' => $currentStudioId, 'week_start' => $startOfWeek->copy()->subWeek()->format('Y-m-d')]) }}"
+                    class="bg-gray-300 px-4 py-2 rounded-md shadow hover:bg-gray-400 transition">
+                    ← 前の週
+                </a>
+
+                <h2 class="text-lg font-semibold">週間スケジュール</h2>
+
+                <!-- 次の週へ移動 -->
+                <a href="{{ route('studio-reservations.create', ['studio_id' => $currentStudioId, 'week_start' => $startOfWeek->copy()->addWeek()->format('Y-m-d')]) }}"
+                    class="bg-gray-300 px-4 py-2 rounded-md shadow hover:bg-gray-400 transition">
+                    次の週 →
+                </a>
+            </div>
             <form method="POST" action="{{ route('studio-reservations.store') }}">
                 @csrf
                 @method('POST')
@@ -69,18 +84,11 @@
                                                 {{ $reservation->reservedUser->name ?? '不明' }}
                                             </span>
                                             @if ($reservation->user_id === auth()->id() || auth()->user()->admin)
-                                            <form method="POST"
-                                            action="{{ route('studio-reservations.destroy', ['studio_reservation' => $reservation->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-green-500 text-white px-4 py-2 rounded">削除する</button>
-                                        </form>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="ml-2 text-white bg-red-500 px-2 py-1 rounded-md admin-delete hidden">削除</button>
-                                                </form>
+                                                <button type="button"
+                                                    class="ml-2 text-white bg-red-500 px-2 py-1 rounded-md admin-delete"
+                                                    onclick="deleteReservation({{ $reservation->id }})">
+                                                    削除
+                                                </button>
                                             @endif
                                         @elseif (!$isPast)
                                             <input type="checkbox"
@@ -101,6 +109,36 @@
     </div>
 
     <script>
+        //削除リクエスト送信
+        function deleteReservation(reservationId) {
+            if (!confirm("本当に削除しますか？")) {
+                return;
+            }
+
+            fetch("{{ route('studio-reservations.destroy', '') }}/" + reservationId, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify({
+                        _method: "DELETE"
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert("削除に失敗しました");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("エラーが発生しました");
+                });
+        }
+
         function toggleAdminMode() {
             let adminModeText = document.getElementById("admin-mode-text");
             let deleteButtons = document.querySelectorAll(".admin-delete");

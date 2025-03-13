@@ -66,6 +66,15 @@ class StudioReservationController extends Controller
             'reservation' => 'required|array',           // 予約データが配列であることを確認
         ]);
 
+        $existingReservation = StudioReservation::where('studio_id', $request->studio_id)
+            ->where('use_datetime', $request->use_datetime)
+            ->whereNull('deleted_at') // 論理削除されていないものだけチェック
+            ->exists();
+
+        if ($existingReservation) {
+            return redirect()->back()->with('status', 'その時間帯は既に予約されています。');
+        }
+
         $studioId = $request->input('studio_id'); // フォームから送信されたスタジオID
         $reservations = $request->input('reservation'); // 予約情報
 
@@ -126,13 +135,13 @@ class StudioReservationController extends Controller
         //
 
         try {
+
             $reservation = StudioReservation::findOrFail($id);
 
             if (auth()->user()->admin || $reservation->reserved_user_id == auth()->id()) {
                 $reservation->delete();
                 return redirect()->back()->with('status', 'キャンセルが完了しました！');
             }
-
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存
             return redirect()->back()->with('status', 'キャンセルに失敗しました。');

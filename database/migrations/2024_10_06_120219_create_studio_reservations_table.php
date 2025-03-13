@@ -14,10 +14,15 @@ return new class extends Migration
         //
         Schema::create('studio_reservations', function (Blueprint $table){
             $table->id();
-            $table->dateTime('use_datetime')->unique(); //予約の重複を許さない
+            $table->dateTime('use_datetime');
             $table->foreignId('studio_id')->constrained('studios');
             $table->foreignId('reserved_user_id')->constrained('users');
             $table->string('reserved_band_id')->nullable();
+
+            $table->index(['studio_id', 'use_datetime']);
+
+            //論理削除で使うdeleted_atを追加
+            $table->softDeletes();
 
             $table->timestamps();
         });
