@@ -10,14 +10,14 @@ class DashboardController extends Controller
 {
     //
     public function index()
-{
-    // ログインユーザの予約情報を取得
-    $myReservations = StudioReservation::where('reserved_user_id', Auth::id())->get();
+    {
+        // ログインユーザの予約情報を取得
+        $myReservations = StudioReservation::where('reserved_user_id', Auth::id())->get();
 
-    //バンド情報を取得
-    // $myBands =
+        //バンド情報を取得
+        // $myBands =
 
-    // 取得したデータをビューに渡す
-    return view('dashboard', compact('myReservations'));
-}
+        // 取得したデータをビューに渡す
+        return view('dashboard',["myReservations" => $myReservations ]);
+    }
 }

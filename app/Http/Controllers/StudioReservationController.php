@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\StudioReservation;
 use App\Models\Studio;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 
 class StudioReservationController extends Controller
@@ -107,8 +108,12 @@ class StudioReservationController extends Controller
      */
     public function show(string $id)
     {
-        //
-        return view('studio_reservation.show');
+        $reservation = StudioReservation::with(['studio', 'reservedUser'])->findOrFail($id);
+
+
+        return view('reservation-detail', [
+            'reservation' => $reservation,
+        ]);
     }
 
     /**
@@ -124,7 +129,29 @@ class StudioReservationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //一時的にstringに
+        $validator = Validator::make($request->all(), [
+            'reserved_band_id' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $reservation = StudioReservation::find($id);
+
+        if (!$reservation) {
+            abort(404, '予約が見つかりません');
+        }
+
+        elseif (auth()->check() && (auth()->user()->admin || $reservation->reserved_user_id == auth()->id())) {
+            $reservation->reserved_band_id = $request->reserved_band_id;
+            $reservation->save();
+
+            return back()->with('status', 'バンド名を更新しました。');
+        } else {
+            return redirect()->back()->with('status', '更新する権限がありません。');
+        }
     }
 
     /**
@@ -132,19 +159,23 @@ class StudioReservationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $reservation = StudioReservation::find($id);
 
-        try {
-
-            $reservation = StudioReservation::findOrFail($id);
-
-            if (auth()->user()->admin || $reservation->reserved_user_id == auth()->id()) {
-                $reservation->delete();
-                return redirect()->back()->with('status', 'キャンセルが完了しました！');
-            }
-        } catch (\Exception $e) {
-            // エラーメッセージをセッションに保存
-            return redirect()->back()->with('status', 'キャンセルに失敗しました。');
+        if (!$reservation) {
+            return back()->with('status', '予約が見つかりません。');
         }
+
+        // ログインしているか確認
+        if (!auth()->check()) {
+            return redirect('/login')->with('status', 'ログインしてください。');
+        }
+
+        // 管理者 または 予約者本人なら削除を許可
+        if (auth()->user()->admin || $reservation->reserved_user_id == auth()->id()) {
+            $reservation->delete();
+            return redirect('/dashboard')->with('status', '予約を削除しました。');
+        }
+
+        return back()->with('status', 'キャンセルする権限がありません。');
     }
 }

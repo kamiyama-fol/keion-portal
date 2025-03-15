@@ -1,4 +1,3 @@
-{{-- resources/views/dashboard.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center">
@@ -39,12 +38,33 @@
                             </thead>
                             <tbody>
                                 @foreach ($myReservations as $myReservation)
+                                    @php
+                                        // 予約時間の終了時間（1時間後）
+                                        $reservationEnd = \Carbon\Carbon::parse($myReservation->use_datetime)->addHour();
+
+                                        // その日の予約を取得（同じスタジオ & 同じ日付）
+                                        $otherReservations = $myReservations->filter(function ($res) use ($myReservation) {
+                                            return $res->studio_id == $myReservation->studio_id &&
+                                                \Carbon\Carbon::parse($res->use_datetime)->format('Y-m-d') ==
+                                                \Carbon\Carbon::parse($myReservation->use_datetime)->format('Y-m-d');
+                                        });
+
+                                        // 予約の終了時間より後の予約があるか
+                                        $hasLaterReservation = $otherReservations->contains(function ($res) use ($reservationEnd) {
+                                            return \Carbon\Carbon::parse($res->use_datetime)->greaterThan($reservationEnd);
+                                        });
+
+                                        // 鍵返却が必要かどうか
+                                        $needKeyReturn = !$hasLaterReservation;
+                                    @endphp
+
                                     <tr>
                                         <td class="border px-4 py-2">{{ $myReservation->use_datetime }}</td>
-                                        <td class="border px-4 py-2">{{ $myReservation->studio_id }}</td>
+                                        <td class="border px-4 py-2">{{ $myReservation->studio->name}}</td>
                                         <td class="border px-4 py-2">{{ $myReservation->reserved_band_id }}</td>
-                                        <td class="border px-4 py-2"></td>
-
+                                        <td class="border px-4 py-2">
+                                            {{ $needKeyReturn ? '必要' : '不要' }}
+                                        </td>
                                         <td class="border px-4 py-2">
                                             <form method="POST"
                                                 action="{{ route('studio-reservations.destroy', $myReservation->id )}}">

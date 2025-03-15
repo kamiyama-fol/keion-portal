@@ -9,9 +9,9 @@
         <!-- 管理モード切り替えボタン -->
         @if (auth()->user()->admin)
             <div class="mb-4 text-right">
-                <button onclick="toggleAdminMode()" id="admin-toggle" class="bg-red-500 text-white px-4 py-2 rounded-md">
-                    管理モード: <span id="admin-mode-text">OFF</span>
-                </button>
+                <a href={{ route('studio-reservations.index') }} class="bg-green-500 text-white px-4 py-2 rounded-md">
+                    予約ログ
+                </a>
             </div>
         @endif
 
@@ -83,13 +83,11 @@
                                             <span class="text-red-500 font-bold">
                                                 {{ $reservation->reservedUser->name ?? '不明' }}
                                             </span>
-                                            @if ($reservation->user_id === auth()->id() || auth()->user()->admin)
-                                                <button type="button"
-                                                    class="ml-2 text-white bg-red-500 px-2 py-1 rounded-md admin-delete"
-                                                    onclick="deleteReservation({{ $reservation->id }})">
-                                                    削除
-                                                </button>
-                                            @endif
+
+                                            <a href="{{ route('studio-reservations.show', $reservation->id) }}"
+                                                class="bg-blue-500 text-white px-4 py-2 shadow-md rounded-lg hover:bg-blue-600 mb-4">
+                                                詳細
+                                            </a>
                                         @elseif (!$isPast)
                                             <input type="checkbox"
                                                 name="reservation[{{ $hour }}][{{ $date->format('Y-m-d') }}]" />
@@ -101,52 +99,10 @@
                         @endfor
                     </tbody>
                 </table>
-                <button type="submit" class="bg-blue-500 px-4 py-2 shadow-md rounded-lg hover:bg-blue-600 mb-4">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 shadow-md rounded-lg hover:bg-blue-600 mb-4">
                     予約する
                 </button>
             </form>
         </div>
     </div>
-
-    <script>
-        //削除リクエスト送信
-        function deleteReservation(reservationId) {
-            if (!confirm("本当に削除しますか？")) {
-                return;
-            }
-
-            fetch("{{ route('studio-reservations.destroy', '') }}/" + reservationId, {
-                    method: "DELETE",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    body: JSON.stringify({
-                        _method: "DELETE"
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert("削除に失敗しました");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("エラーが発生しました");
-                });
-        }
-
-        function toggleAdminMode() {
-            let adminModeText = document.getElementById("admin-mode-text");
-            let deleteButtons = document.querySelectorAll(".admin-delete");
-            let isActive = adminModeText.innerText === "ON";
-            adminModeText.innerText = isActive ? "OFF" : "ON";
-            deleteButtons.forEach(btn => {
-                btn.classList.toggle("hidden", isActive);
-            });
-        }
-    </script>
 </x-app-layout>
