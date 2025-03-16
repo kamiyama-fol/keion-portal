@@ -39,8 +39,8 @@
                             <tbody>
                                 @foreach ($myReservations as $myReservation)
                                     @php
-                                        // 予約時間の終了時間（1時間後）
-                                        $reservationEnd = \Carbon\Carbon::parse($myReservation->use_datetime)->addHour();
+                                        // 予約時間の終了時間
+                                        $reservationEnd = \Carbon\Carbon::parse($myReservation->use_datetime);
 
                                         // その日の予約を取得（同じスタジオ & 同じ日付）
                                         $otherReservations = $myReservations->filter(function ($res) use ($myReservation) {

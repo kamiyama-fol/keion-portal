@@ -16,9 +16,51 @@ class StudioReservationController extends Controller
      * Display a listing of the resource.
      * スタジオの予約状況のテーブルを表示する。
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $query = StudioReservation::withTrashed()->orderBy('use_datetime', 'desc');
+
+        // 期間で絞り込み
+        // 期間で絞り込み (タイムスタンプも含む)
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->where(function ($q) use ($request) {
+                $q->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+                    ->orWhereBetween('deleted_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])
+                    ->orWhereBetween('use_datetime', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
+            });
+        }
+
+        // 動作で絞り込み
+        if ($request->filled('action')) {
+            if ($request->action == 'reserved') {
+                $query->whereNull('deleted_at');
+            } elseif ($request->action == 'canceled') {
+                $query->whereNotNull('deleted_at');
+            }
+        }
+
+        // 予約者名で絞り込み
+        if ($request->filled('reserved_user_name')) {
+            $query->whereHas('reservedUser', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->reserved_user_name . '%');
+            });
+        }
+
+        // 予約バンドで絞り込み
+        if ($request->filled('reserved_band_id')) {
+            $query->where('reserved_band_id', 'like', '%' . $request->reserved_band_id . '%');
+        }
+
+
+        $reservations = $query->get();
+
+        if (auth()->user()->admin){
+            return view('reservation-list', compact('reservations'));
+        }else{
+            return redirect()->back()->with('status', '権限がありません');
+        }
+
     }
 
     /**
@@ -92,7 +134,7 @@ class StudioReservationController extends Controller
                         'use_datetime' => Carbon::parse($day . ' ' . $hour . ':00'), // 予約日時
                         'studio_id' => $studioId,                                    // スタジオID
                         'reserved_user_id' => Auth::user()->id,                 // ログイン中のユーザーID
-                        'reserved_band_id' => 0,                            // 固定値のバンド名
+                        'reserved_band_id' => '入力して下さい',                            // 固定値のバンド名
                     ]);
                 }
             }
@@ -142,9 +184,7 @@ class StudioReservationController extends Controller
 
         if (!$reservation) {
             abort(404, '予約が見つかりません');
-        }
-
-        elseif (auth()->check() && (auth()->user()->admin || $reservation->reserved_user_id == auth()->id())) {
+        } elseif (auth()->check() && (auth()->user()->admin || $reservation->reserved_user_id == auth()->id())) {
             $reservation->reserved_band_id = $request->reserved_band_id;
             $reservation->save();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Studio;
+use App\Models\StudioReservation;
 
 /**
  * 予約するスタジオを制御するコントローラ
@@ -112,6 +113,7 @@ class StudioController extends Controller
             return redirect('/');
         }
         $studio->delete();
+
         return redirect()->route('studios.index')->with('status', 'スタジオが削除されました。');
         //
     }

@@ -31,7 +31,9 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255','regex:/@cc\.kyoto-su\.ac\.jp$/', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255',
+            //'regex:/@cc\.kyoto-su\.ac\.jp$/', //状況に応じて大学のメールアドレスに登録を促してみる
+            'unique:'.User::class],
 
             // 追加した項目
             'birthday'=>['date_format:Y-m-d'],

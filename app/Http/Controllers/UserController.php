@@ -43,7 +43,7 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
-        if (Auth::user()->admin != 1) {
+        if (!auth()->user()->admin) {
             return redirect('/');
         } elseif (Auth::user()->id == $id) {
             return redirect();
