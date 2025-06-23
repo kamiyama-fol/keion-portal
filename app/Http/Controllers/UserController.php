@@ -40,20 +40,28 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
-        if (!auth()->user()->admin) {
-            return redirect('/');
-        } elseif (Auth::user()->id == $id) {
-            return redirect();
-        } else {
-            $user = User::findOrFail($id);
-            $userName = $user->name;  // 削除するユーザーの名前を事前に取得
-            $user->delete();
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'ユーザーを削除しました。');
+    }
 
-            // 成功メッセージをセッションに保存してリダイレクト
-            return redirect()->back()->with('status', 'ユーザを削除しました。');
+    /**
+     * ユーザー検索API
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        if (strlen($query) < 2) {
+            return response()->json([]);
         }
+
+        $users = User::where('name', 'like', "%{$query}%")
+            ->select('id', 'name')
+            ->limit(5)
+            ->get();
+
+        return response()->json($users);
     }
 }

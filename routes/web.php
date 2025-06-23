@@ -7,6 +7,8 @@ use App\Http\Controllers\StudioReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use App\Http\Controllers\LiveController;
+use App\Http\Controllers\BandController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -37,6 +39,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/studios', StudioController::class)->only(['index','store', 'update', 'destroy']);
     Route::resource("/studio-reservations", StudioReservationController::class);
+
+    Route::resource('lives', LiveController::class)->middleware(['auth']);
+    Route::resource('bands', BandController::class)->middleware(['auth']);
+    Route::get('lives/{live}/bands/create', [BandController::class, 'create'])->name('lives.bands.create');
+    Route::post('bands/{band}/remove-member', [BandController::class, 'removeMember'])->name('bands.remove-member');
+
+    // ユーザー検索API
+    Route::get('/api/users/search', [UserController::class, 'search'])->name('api.users.search');
 });
 
 

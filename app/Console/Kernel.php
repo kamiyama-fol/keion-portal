@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
         // 例: $schedule->command('inspire')->hourly();
 
         //毎日深夜3時に過去の予約を削除する
-        $schedule->command('reservations:delete-past-reservations')->dailyAt('3:00');
+        $schedule->command('reservations:delete-past-reservations')->dailyAt('03:00');
     }
 
     /**

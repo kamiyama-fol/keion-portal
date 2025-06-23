@@ -18,7 +18,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
-        'display_name',
 
         //追加項目
         'grade',

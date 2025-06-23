@@ -14,14 +14,13 @@ class StudioReservationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * スタジオの予約状況のテーブルを表示する。
+     * スタジオの予約状況のログを表示する。
      */
     public function index(Request $request)
     {
         //
         $query = StudioReservation::withTrashed()->orderBy('use_datetime', 'desc');
 
-        // 期間で絞り込み
         // 期間で絞り込み (タイムスタンプも含む)
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->where(function ($q) use ($request) {
@@ -71,6 +70,11 @@ class StudioReservationController extends Controller
     {
         // スタジオ一覧を取得
         $studios = Studio::all();
+
+        // スタジオが存在しない場合はエラーメッセージを表示
+        if ($studios->isEmpty()) {
+            return redirect()->back()->with('error', 'スタジオが登録されていません。管理者に連絡してください。');
+        }
 
         // 現在選択されているスタジオID（デフォルトは最初のスタジオ）
         $currentStudioId = $request->input('studio_id', $studios->first()->id);
@@ -160,6 +164,7 @@ class StudioReservationController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
      */
     public function edit(string $id)
     {

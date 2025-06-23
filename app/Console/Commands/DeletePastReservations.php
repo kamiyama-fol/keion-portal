@@ -27,18 +27,18 @@ class DeletePastReservations extends Command
      */
     public function handle()
     {
-        //
-        $pastReservation = StudioReservation::where('reserve_datetime', '<', Carbon::now());
+        // 過去の予約を取得（論理削除されていないもの）
+        $pastReservations = StudioReservation::where('use_datetime', '<', Carbon::now())
+            ->whereNull('deleted_at');
 
-        //予約のデータ数が1000を超えたら物理削除（容量圧迫防止）
-        if ($pastReservation->count() > 10000){
-            $deleted = $pastReservation->forceDelete();
-        }else{
-            //論理削除
-            $deleted = $pastReservation->delete();
+        // 予約のデータ数が1000を超えたら物理削除（容量圧迫防止）
+        if ($pastReservations->count() > 1000) {
+            $deleted = $pastReservations->forceDelete();
+            $this->info("過去の予約を {$deleted} 件物理削除しました。");
+        } else {
+            // 論理削除
+            $deleted = $pastReservations->delete();
+            $this->info("過去の予約を {$deleted} 件論理削除しました。");
         }
-
-
-        $this->info("過去の予約を {$deleted} 件削除しました。");
     }
 }

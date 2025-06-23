@@ -19,7 +19,18 @@
                     </x-nav-link>
                 </div>
 
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('lives.index')" :active="request()->routeIs('lives.index')">
+                        {{ __('ライブ一覧') }}
+                    </x-nav-link>
+                </div>
+
                 @if (Auth::user()->admin == 1)
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('lives.create')" :active="request()->routeIs('lives.create')">
+                            {{ __('ライブ登録') }}
+                        </x-nav-link>
+                    </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users')">
                             {{ __('名簿') }}
@@ -92,7 +103,17 @@
             <x-responsive-nav-link :href="route('studio-reservations.create')" :active="request()->routeIs('studio-reservations')">
                 {{ __('スタジオ予約') }}
             </x-responsive-nav-link>
+
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-responsive-nav-link :href="route('lives.index')" :active="request()->routeIs('lives.index')">
+                    {{ __('ライブ一覧') }}
+                </x-responsive-nav-link>
+            </div>
+
             @if (Auth::user()->admin == 1)
+                <x-responsive-nav-link :href="route('lives.create')" :active="request()->routeIs('lives.create')">
+                    {{ __('ライブ登録') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users')">
                     {{ __('名簿') }}
                 </x-responsive-nav-link>
